@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Баланс Telegram</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>    
+    <div id="mainScreen" class="screen">
+        <div class="container">
+            <div class="header">
+                <h1>💰 Управление балансом</h1>                
+            </div>
+
+            <div class="user-info">
+                <h2 id="userName">Загрузка...</h2>
+                <div class="balance-card">
+                    <p class="balance-label">Текущий баланс</p>
+                    <p class="balance-amount" id="balanceAmount">0.00 €</p>
+                </div>
+            </div>
+
+            <div class="actions">
+                <div class="action-card">
+                    <h3>➕ Пополнить баланс</h3>
+                    <input type="number" id="depositAmount" placeholder="Сумма" min="0" step="0.01">
+                    <input type="text" id="depositDescription" placeholder="Описание (необязательно)">
+                    <button onclick="deposit()" class="deposit-btn">Пополнить</button>
+                </div>
+
+                <div class="action-card">
+                    <h3>➖ Снять средства</h3>
+                    <input type="number" id="withdrawAmount" placeholder="Сумма" min="0" step="0.01">
+                    <input type="text" id="withdrawDescription" placeholder="Описание (необязательно)">
+                    <button onclick="withdraw()" class="withdraw-btn">Снять</button>
+                </div>
+            </div>
+
+            <div class="transactions">
+                <h3>📋 История операций</h3>
+                <div id="transactionsList" class="transactions-list">
+                    <p class="loading">Загрузка...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script src="app.js?v=1.0.02"></script>
+</body>
+</html>
