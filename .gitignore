@@ -416,3 +416,8 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# DataBase files SQLite
+*.db
+*.db-shm
+*.db-wal
