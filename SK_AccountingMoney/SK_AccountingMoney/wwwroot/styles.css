@@ -29,13 +29,14 @@ body {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
     }
 }
 
-/* Главный экран */
+/* Main screen */
 .header {
     display: flex;
     justify-content: space-between;
@@ -64,7 +65,7 @@ body {
     color: #667eea;
 }
 
-/* Информация о пользователе */
+/* User info */
 .user-info {
     background: white;
     padding: 30px;
@@ -102,11 +103,16 @@ body {
 }
 
 @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
+    0%, 100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
 }
 
-/* Действия */
+/* Actions */
 .actions {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -135,21 +141,44 @@ body {
     font-size: 16px;
 }
 
-.action-card input:focus {
-    outline: none;
-    border-color: #667eea;
+ .action-card input:focus {
+     outline: none;
+     border-color: #667eea;
+ }
+
+ .action-card button {
+     width: 100%;
+     padding: 12px;
+     margin-top: 10px;
+     border: none;
+     border-radius: 8px;
+     font-size: 16px;
+     font-weight: bold;
+     cursor: pointer;
+     transition: all 0.3s;
+    }
+
+.secondary-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 20px;
 }
 
-.action-card button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
+.secondary-btn {
+    padding: 15px 20px;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s;
+    color: green;
+}
+
+.secondary-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .deposit-btn {
@@ -172,7 +201,7 @@ body {
     transform: translateY(-2px);
 }
 
-/* Транзакции */
+/* Transactions */
 .transactions {
     background: white;
     padding: 25px;
@@ -245,7 +274,97 @@ body {
     color: #666;
 }
 
-/* Уведомления */
+.modal {
+    display: none; /* Скрыто по умолчанию */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Затемнение фона */
+    animation: fadeIn 0.3s ease;
+}
+
+.modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.modal-header h2 {
+    margin: 0;
+    color: #333;
+    font-size: 1.5em;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 30px;
+    color: #999;
+    cursor: pointer;
+    padding: 0;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s;
+}
+
+.close-btn:hover {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+/* Notifications */
 .notification {
     position: fixed;
     top: -100px;
@@ -276,23 +395,64 @@ body {
     background: #2196f3;
 }
 
-/* Адаптивность */
 @media (max-width: 768px) {
     .header {
         flex-direction: column;
         gap: 15px;
         text-align: center;
     }
-    
-    .header h1 {
-        font-size: 1.8em;
-    }
-    
-    .actions {
-        grid-template-columns: 1fr;
-    }
-    
-    .balance-amount {
-        font-size: 2.5em;
+
+  .header h1 {
+      font-size: 1.8em;
+  }
+
+  .actions {
+      grid-template-columns: 1fr;
+  }
+
+  .balance-amount {
+      font-size: 2.5em;
+  }
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+.modal-body input {
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.modal-body input:focus {
+    outline: none;
+    border-color: #4caf50;
+}
+
+.modal-body button {
+    width: 100%;
+    padding: 15px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.modal-content {
+    min-width: 400px; 
+}
+
+@media (max-width: 768px) {
+    .modal-content {
+        min-width: auto;
+        width: 95%;
     }
 }

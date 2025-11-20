@@ -95,6 +95,49 @@ async function loadTransactions() {
     }
 }
 
+function openDepositModal() {
+    const modal = document.getElementById('depositModal');
+    modal.classList.add('show');
+
+    modal.onclick = function (event) {
+        if (event.target === modal) {
+            closeDepositModal();
+        }
+    };
+}
+
+function closeDepositModal() {
+    const modal = document.getElementById('depositModal');
+    modal.classList.remove('show');
+    document.getElementById('depositAmount').value = '';
+    document.getElementById('depositDescription').value = '';
+}
+
+function openHistoryModal() {
+    const modal = document.getElementById('historyModal');
+    modal.classList.add('show');
+
+    loadTransactions();
+
+    modal.onclick = function (event) {
+        if (event.target === modal) {
+            closeHistoryModal();
+        }
+    };
+}
+
+function closeHistoryModal() {
+    const modal = document.getElementById('historyModal');
+    modal.classList.remove('show');
+}
+
+document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') {
+        closeDepositModal();
+        closeHistoryModal();
+    }
+});
+
 // Пополнение баланса
 async function deposit() {
     const amount = parseFloat(document.getElementById('depositAmount').value);
@@ -121,8 +164,9 @@ async function deposit() {
         
         if (response.ok) {
             showNotification('Баланс успешно пополнен!', 'success');
+            closeDepositModal();
             document.getElementById('depositAmount').value = '';
-            document.getElementById('depositDescription').value = '';
+            document.getElementById('depositDescription').value = '';            
             await loadUserData();
         } else {
             showNotification(data.error || 'Ошибка пополнения', 'error');
