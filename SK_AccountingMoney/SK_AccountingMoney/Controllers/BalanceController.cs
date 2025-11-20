@@ -20,11 +20,22 @@ namespace SK_AccountingMoney.Controllers
             return (long)(HttpContext.Items["TelegramId"] ?? 0);
         }
 
+        private long GetTelegramIdFromCookie()
+        {
+            var telegramId = Request.Cookies["telegram_id"];
+
+            if (string.IsNullOrEmpty(telegramId))
+                return 0;
+
+            return long.TryParse(telegramId, out var id) ? id : 0;
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetBalance()
         {
-            var telegramId = GetTelegramId();
-            var balance = await _balanceService.GetBalanceAsync(telegramId);
+            var telegramId = GetTelegramIdFromCookie();
+                //GetTelegramId();
+            var balance = await _balanceService.GetSharedBalanceAsync(telegramId);
 
             return Ok(new { balance });
         }
@@ -32,18 +43,21 @@ namespace SK_AccountingMoney.Controllers
         [HttpGet("user")]
         public async Task<IActionResult> GetUser()
         {
-            var telegramId = GetTelegramId();
+            var telegramId = GetTelegramIdFromCookie();
+                //GetTelegramId();
             var user = await _balanceService.GetUserByTelegramIdAsync(telegramId);
 
             if (user == null)
                 return NotFound();
+
+            var sharedBalance = await _balanceService.GetSharedBalanceAsync(telegramId);
 
             return Ok(new
             {
                 id = user.Id,
                 telegramId = user.TelegramId,
                 userName = user.UserName,
-                balance = user.Balance               
+                balance = sharedBalance
             });
         }
 
@@ -53,13 +67,14 @@ namespace SK_AccountingMoney.Controllers
             if (request.Amount <= 0)
                 return BadRequest(new { error = "Сумма должна быть больше 0" });
 
-            var telegramId = GetTelegramId();
+            var telegramId = GetTelegramIdFromCookie();
+                //GetTelegramId();
             var success = await _balanceService.DepositAsync(telegramId, request.Amount, request.Description);
 
             if (!success)
                 return BadRequest(new { error = "Ошибка при пополнении баланса" });
 
-            var newBalance = await _balanceService.GetBalanceAsync(telegramId);
+            var newBalance = await _balanceService.GetSharedBalanceAsync(telegramId);
             return Ok(new { success = true, balance = newBalance, message = "Баланс пополнен" });
         }
 
@@ -69,28 +84,32 @@ namespace SK_AccountingMoney.Controllers
             if (request.Amount <= 0)
                 return BadRequest(new { error = "Сумма должна быть больше 0" });
 
-            var telegramId = GetTelegramId();
+            var telegramId = GetTelegramIdFromCookie();
+                //GetTelegramId();
             var success = await _balanceService.WithdrawAsync(telegramId, request.Amount, request.Description);
 
             if (!success)
                 return BadRequest(new { error = "Недостаточно средств или ошибка при снятии" });
 
-            var newBalance = await _balanceService.GetBalanceAsync(telegramId);
+            var newBalance = await _balanceService.GetSharedBalanceAsync(telegramId);
             return Ok(new { success = true, balance = newBalance, message = "Средства сняты" });
         }
 
         [HttpGet("transactions")]
-        public async Task<IActionResult> GetTransactions([FromQuery] int limit = 50)
+        public async Task<IActionResult> GetTransactions([FromQuery] int limit = 150)
         {
-            var telegramId = GetTelegramId();
-            var transactions = await _balanceService.GetTransactionHistoryAsync(telegramId, limit);
+            var telegramId = GetTelegramIdFromCookie();
+                //GetTelegramId();
+            var transactions = await _balanceService.GetAllTransactionAsync(limit);
 
             return Ok(transactions.Select(t => new
             {
                 id = t.Id,
-                amount = t.Amount,                
+                amount = t.Amount,
+                type = t.Type,
                 description = t.Description,
-                createdAt = t.CreatedAt
+                createdAt = t.CreatedAt,
+                userName = t.User?.UserName
             }));
         }
     }

@@ -58,27 +58,36 @@ async function loadTransactions() {
         const response = await fetch('/api/balance/transactions?limit=20');
         const transactions = await response.json();
         
-        const listElement = document.getElementById('transactionsList');
+        const listElement = document.getElementById('transactionsList');        
         
         if (transactions.length === 0) {
             listElement.innerHTML = '<p class="empty">История транзакций пуста</p>';
             return;
         }
         
-        listElement.innerHTML = transactions.map(t => `
-            <div class="transaction-item ${t.type}">
-                <div class="transaction-info">
-                    <span class="transaction-icon">${t.type === 'deposit' ? '➕' : '➖'}</span>
-                    <div>
-                        <p class="transaction-description">${t.description}</p>
-                        <p class="transaction-date">${formatDate(t.createdAt)}</p>
+        listElement.innerHTML = transactions.map(t => {
+            const isDeposit = t.type === 'deposit';
+            const icon = isDeposit ? '➕' : '➖';
+            const sign = isDeposit ? '+' : '-';
+            const colorClass = isDeposit ? 'deposit' : 'withdraw';
+            
+            const userInfo = t.userName ? ` (${t.userName})` : '';
+
+            return `
+                <div class="transaction-item ${colorClass}">
+                    <div class="transaction-info">
+                        <span class="transaction-icon">${icon}</span>
+                        <div>
+                            <p class="transaction-description">${t.description || 'Без описания'}${userInfo}</p>
+                            <p class="transaction-date">${formatDate(t.createdAt)}</p>
+                        </div>
+                    </div>
+                    <div class="transaction-amount ${colorClass}">
+                        ${sign}${t.amount.toFixed(2)} €
                     </div>
                 </div>
-                <div class="transaction-amount ${t.type}">
-                    ${t.type === 'deposit' ? '+' : '-'}${t.amount.toFixed(2)} ₽
-                </div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
     } catch (error) {
         console.error('Ошибка загрузки транзакций:', error);
         document.getElementById('transactionsList').innerHTML = 

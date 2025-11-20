@@ -56,7 +56,7 @@ namespace SK_AccountingMoney.Controllers
                     id = user.Id,
                     telegramId = user.TelegramId,
                     userName = user.UserName,
-                    balance = user.Balance                    
+                   // balance = user.Balance                    
                 }
             });
         }
@@ -91,8 +91,7 @@ namespace SK_AccountingMoney.Controllers
                 {
                     id = user.Id,
                     telegramId = user.TelegramId,
-                    userName = user.UserName,
-                    balance = user.Balance                    
+                    userName = user.UserName                                      
                 }
             });
         }

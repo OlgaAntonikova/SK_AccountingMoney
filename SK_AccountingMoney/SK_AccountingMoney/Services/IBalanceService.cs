@@ -5,9 +5,9 @@ namespace SK_AccountingMoney.Services
     public interface IBalanceService
     {
         Task<User> GetUserByTelegramIdAsync(long telegramId);
-        Task<decimal> GetBalanceAsync(long telegramId);
+        Task<decimal> GetSharedBalanceAsync(long telegramId);
         Task<bool> DepositAsync(long telegramId, decimal amount, string description = null);
         Task<bool> WithdrawAsync(long telegramId, decimal amount, string description = null);
-        Task<List<Transaction>> GetTransactionHistoryAsync(long telegramId, int limit = 50);
+        Task<List<Transaction>> GetAllTransactionAsync(int limit = 150);
     }
 }

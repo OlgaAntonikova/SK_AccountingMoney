@@ -7,6 +7,7 @@ namespace SK_AccountingMoney.Services
     public class BalanceService : IBalanceService
     {
         private readonly AppDbContext _context;
+        private const string MAIN_BALANCE_NAME = "Main";
 
         public BalanceService(AppDbContext context)
         {
@@ -19,10 +20,34 @@ namespace SK_AccountingMoney.Services
                 .FirstOrDefaultAsync(u => u.TelegramId == telegramId);
         }
 
-        public async Task<decimal> GetBalanceAsync(long telegramId)
+        /// <summary>
+        ///Get or create shared balance
+        /// </summary>
+        private async Task<SharedBalance> GetOrCreateSharedBalanceAsync()
         {
-            var user = await GetUserByTelegramIdAsync(telegramId);
-            return user?.Balance ?? 0;
+            var sharedBalance = await _context.SharedBalances
+                .FirstOrDefaultAsync(sb => sb.Name == MAIN_BALANCE_NAME);
+
+            if (sharedBalance == null)
+            {
+                sharedBalance = new SharedBalance
+                {
+                    Name = MAIN_BALANCE_NAME,
+                    Balance = 0,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                };
+                _context.SharedBalances.Add(sharedBalance);
+                await _context.SaveChangesAsync();
+            }
+
+            return sharedBalance;
+        }
+
+        public async Task<decimal> GetSharedBalanceAsync(long telegramId)
+        {
+            var sharedBalance = await GetOrCreateSharedBalanceAsync();
+            return sharedBalance?.Balance ?? 0;
         }
 
         public async Task<bool> DepositAsync(long telegramId, decimal amount, string description = null)
@@ -34,12 +59,18 @@ namespace SK_AccountingMoney.Services
             if (user == null)
                 return false;
 
-            user.Balance += amount;
+
+            var sharedBalance = await GetOrCreateSharedBalanceAsync();
+
+            // Update shared balance
+            sharedBalance.Balance += amount;
+            sharedBalance.UpdatedAt = DateTime.UtcNow;
 
             var transaction = new Transaction
             {
                 UserId = user.Id,
-                Amount = amount,                
+                Amount = amount,
+                Type = "deposit",
                 Description = description ?? "Пополнение баланса"
             };
 
@@ -55,15 +86,21 @@ namespace SK_AccountingMoney.Services
                 return false;
 
             var user = await GetUserByTelegramIdAsync(telegramId);
-            if (user == null || user.Balance < amount)
-                return false;
+            
+            var sharedBalance = await GetOrCreateSharedBalanceAsync();
 
-            user.Balance -= amount;
+            if (user == null || sharedBalance.Balance < amount)
+                return false;            
+
+            // Update shared balance
+            sharedBalance.Balance -= amount;
+            sharedBalance.UpdatedAt = DateTime.UtcNow;
 
             var transaction = new Transaction
             {
                 UserId = user.Id,
-                Amount = amount,                
+                Amount = amount,
+                Type = "withdraw",
                 Description = description ?? "Снятие средств"
             };
 
@@ -73,14 +110,10 @@ namespace SK_AccountingMoney.Services
             return true;
         }
 
-        public async Task<List<Transaction>> GetTransactionHistoryAsync(long telegramId, int limit = 50)
+        public async Task<List<Transaction>> GetAllTransactionAsync(int limit = 150)
         {
-            var user = await GetUserByTelegramIdAsync(telegramId);
-            if (user == null)
-                return new List<Transaction>();
-
             return await _context.Transactions
-                .Where(t => t.UserId == user.Id)
+                .Include(t => t.User)                
                 .OrderByDescending(t => t.CreatedAt)
                 .Take(limit)
                 .ToListAsync();

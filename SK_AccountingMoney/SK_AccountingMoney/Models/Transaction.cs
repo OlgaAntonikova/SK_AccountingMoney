@@ -21,5 +21,9 @@ namespace SK_AccountingMoney.Models
         
         [ForeignKey("UserId")]
         public virtual User User { get; set; }
+
+        [Required]
+        [MaxLength(20)]
+        public string Type { get; set; } // "deposit" or "withdraw"
     }
 }
