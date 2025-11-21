@@ -71,7 +71,7 @@ namespace SK_AccountingMoney.Services
                 UserId = user.Id,
                 Amount = amount,
                 Type = "deposit",
-                Description = description ?? "Пополнение баланса"
+                Description = description ?? "Balance replenishment"
             };
 
             _context.Transactions.Add(transaction);
@@ -101,7 +101,7 @@ namespace SK_AccountingMoney.Services
                 UserId = user.Id,
                 Amount = amount,
                 Type = "withdraw",
-                Description = description ?? "Снятие средств"
+                Description = description ?? "Withdrawal of funds"
             };
 
             _context.Transactions.Add(transaction);

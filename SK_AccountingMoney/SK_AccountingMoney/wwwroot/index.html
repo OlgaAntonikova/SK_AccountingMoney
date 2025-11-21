@@ -3,38 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Баланс Telegram</title>
+    <title>Balance Telegram</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="mainScreen" class="screen">
         <div class="container">
             <div class="header">
-                <h1>💰 Управление балансом</h1>
+                <h1>💰 Balance management</h1>
             </div>
 
             <div class="user-info">
-                <h2 id="userName">Загрузка...</h2>
+                <h2 id="userName">Loading...</h2>
                 <div class="balance-card">
-                    <p class="balance-label">Текущий баланс</p>
+                    <p class="balance-label">Current balance</p>
                     <p class="balance-amount" id="balanceAmount">0.00 €</p>
                 </div>
             </div>
 
             <div class="actions">
                 <div class="action-card">
-                    <h3>➖ Снять средства</h3>
-                    <input type="number" id="withdrawAmount" placeholder="Сумма" min="0" step="0.01">
-                    <input type="text" id="withdrawDescription" placeholder="Описание (необязательно)">
-                    <button onclick="withdraw()" class="withdraw-btn">Снять</button>
+                    <h3>➖ Withdraw money</h3>
+                    <input type="number" id="withdrawAmount" placeholder="Sum" min="0" step="0.01">
+                    <input type="text" id="withdrawDescription" placeholder="Description (optional)">
+                    <button onclick="withdraw()" class="withdraw-btn">Withdraw</button>
                 </div>
             </div>
             <div class="secondary-actions">
                 <button onclick="openDepositModal()" class="secondary-btn deposit-color">
-                    ➕ Пополнить баланс
+                    ➕ Top up balance
                 </button>
                 <button onclick="openHistoryModal()" class="secondary-btn history-color">
-                    📋 История операций
+                    📋 Operation history
                 </button>
             </div>
         </div>
@@ -43,13 +43,13 @@
     <div id="depositModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>➕ Пополнить баланс</h2>
+                <h2>➕ Top up balance</h2>
                 <button class="close-btn" onclick="closeDepositModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <input type="number" id="depositAmount" placeholder="Сумма" min="0" step="0.01">
-                <input type="text" id="depositDescription" placeholder="Описание (необязательно)">
-                <button onclick="deposit()" class="deposit-btn">Пополнить</button>
+                <input type="number" id="depositAmount" placeholder="Sum" min="0" step="0.01">
+                <input type="text" id="depositDescription" placeholder="Description (optional)">
+                <button onclick="deposit()" class="deposit-btn">Top Up</button>
             </div>
         </div>
     </div>
@@ -57,12 +57,12 @@
     <div id="historyModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>📋 История операций</h2>
+                <h2>📋 Operation history</h2>
                 <button class="close-btn" onclick="closeHistoryModal()">&times;</button>
             </div>
             <div class="modal-body">
                 <div id="transactionsList" class="transactions-list">
-                    <p class="loading">Загрузка...</p>
+                    <p class="loading">Loading...</p>
                 </div>
             </div>
         </div>

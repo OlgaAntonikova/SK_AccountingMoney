@@ -13,7 +13,7 @@ namespace SK_AccountingMoney
             builder.Services.AddControllers()
                 .AddJsonOptions(options =>
                 {
-                    // Настройки сериализации JSON
+                    // JSON serialization settings
                     options.JsonSerializerOptions.PropertyNamingPolicy = null;
                     options.JsonSerializerOptions.WriteIndented = true;
                 });
@@ -63,7 +63,7 @@ namespace SK_AccountingMoney
                     dbContext.SharedBalances.Add(new Models.SharedBalance
                     {
                         Name = "Main",
-                        Balance = 500.00m, 
+                        Balance = 0.00m, 
                         CreatedAt = DateTime.UtcNow,
                         UpdatedAt = DateTime.UtcNow
                     });

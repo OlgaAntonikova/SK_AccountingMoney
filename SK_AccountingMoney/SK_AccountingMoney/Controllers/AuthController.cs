@@ -19,19 +19,18 @@ namespace SK_AccountingMoney.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] TelegramLoginRequest request)
         {
-            // Проверяем существование пользователя
+            // Checking the existence of a user
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.TelegramId == request.TelegramId);
 
             if (user == null)
             {
-                return Unauthorized(new { error = "Пользователь не зарегистрирован в системе" });
+                return Unauthorized(new { error = "User is not registered in the system" });
             }
 
-            // В реальном приложении здесь должна быть валидация Telegram данных
-            // используя hash и bot token
+            // In a production application, Telegram data validation should be performed here using the hash and the bot token.
 
-            // Устанавливаем куки для аутентификации
+            // Setting cookies for authentication
             Response.Cookies.Append("telegram_id", request.TelegramId.ToString(), new CookieOptions
             {
                 HttpOnly = true,
@@ -55,8 +54,7 @@ namespace SK_AccountingMoney.Controllers
                 {
                     id = user.Id,
                     telegramId = user.TelegramId,
-                    userName = user.UserName,
-                   // balance = user.Balance                    
+                    userName = user.UserName                                     
                 }
             });
         }
@@ -67,7 +65,7 @@ namespace SK_AccountingMoney.Controllers
             Response.Cookies.Delete("telegram_id");
             Response.Cookies.Delete("telegram_hash");
 
-            return Ok(new { success = true, message = "Вы вышли из системы" });
+            return Ok(new { success = true, message = "Exit from system" });
         }
 
         [HttpGet("check")]

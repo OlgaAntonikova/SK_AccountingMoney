@@ -33,8 +33,7 @@ namespace SK_AccountingMoney.Controllers
         [HttpGet]
         public async Task<IActionResult> GetBalance()
         {
-            var telegramId = GetTelegramIdFromCookie();
-                //GetTelegramId();
+            var telegramId = GetTelegramId();
             var balance = await _balanceService.GetSharedBalanceAsync(telegramId);
 
             return Ok(new { balance });
@@ -43,8 +42,7 @@ namespace SK_AccountingMoney.Controllers
         [HttpGet("user")]
         public async Task<IActionResult> GetUser()
         {
-            var telegramId = GetTelegramIdFromCookie();
-                //GetTelegramId();
+            var telegramId = GetTelegramId();
             var user = await _balanceService.GetUserByTelegramIdAsync(telegramId);
 
             if (user == null)
@@ -65,41 +63,38 @@ namespace SK_AccountingMoney.Controllers
         public async Task<IActionResult> Deposit([FromBody] TransactionRequest request)
         {
             if (request.Amount <= 0)
-                return BadRequest(new { error = "Сумма должна быть больше 0" });
+                return BadRequest(new { error = "Amount must be greater than 0" });
 
-            var telegramId = GetTelegramIdFromCookie();
-                //GetTelegramId();
+            var telegramId = GetTelegramId();
             var success = await _balanceService.DepositAsync(telegramId, request.Amount, request.Description);
 
             if (!success)
-                return BadRequest(new { error = "Ошибка при пополнении баланса" });
+                return BadRequest(new { error = "Error while replenishing balance" });
 
             var newBalance = await _balanceService.GetSharedBalanceAsync(telegramId);
-            return Ok(new { success = true, balance = newBalance, message = "Баланс пополнен" });
+            return Ok(new { success = true, balance = newBalance, message = "Balance has been replenished" });
         }
 
         [HttpPost("withdraw")]
         public async Task<IActionResult> Withdraw([FromBody] TransactionRequest request)
         {
             if (request.Amount <= 0)
-                return BadRequest(new { error = "Сумма должна быть больше 0" });
+                return BadRequest(new { error = "Amount must be greater than 0" });
 
-            var telegramId = GetTelegramIdFromCookie();
-                //GetTelegramId();
+            var telegramId = GetTelegramId();
             var success = await _balanceService.WithdrawAsync(telegramId, request.Amount, request.Description);
 
             if (!success)
-                return BadRequest(new { error = "Недостаточно средств или ошибка при снятии" });
+                return BadRequest(new { error = "Insufficient funds or withdrawal error" });
 
             var newBalance = await _balanceService.GetSharedBalanceAsync(telegramId);
-            return Ok(new { success = true, balance = newBalance, message = "Средства сняты" });
+            return Ok(new { success = true, balance = newBalance, message = "Funds withdrawn" });
         }
 
         [HttpGet("transactions")]
         public async Task<IActionResult> GetTransactions([FromQuery] int limit = 150)
         {
-            var telegramId = GetTelegramIdFromCookie();
-                //GetTelegramId();
+            var telegramId = GetTelegramId();
             var transactions = await _balanceService.GetAllTransactionAsync(limit);
 
             return Ok(transactions.Select(t => new

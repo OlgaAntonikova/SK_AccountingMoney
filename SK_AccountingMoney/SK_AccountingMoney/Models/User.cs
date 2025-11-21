@@ -13,9 +13,7 @@ namespace SK_AccountingMoney.Models
 
         [Required]
         [MaxLength(100)]
-        public string UserName { get; set; }     
-
-       // public decimal Balance { get; set; } = 0;        
+        public string UserName { get; set; }              
         
         public virtual ICollection<Transaction> Transactions { get; set; }
     }

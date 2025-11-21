@@ -1,11 +1,11 @@
 let currentUser = null;
 
-// Инициализация приложения
+// Initializing the Application
 document.addEventListener('DOMContentLoaded', async () => {
     await checkAuth();
 });
 
-// Проверка аутентификации
+// Authentication check
 async function checkAuth() {
     try {
         const response = await fetch('/api/auth/check');
@@ -18,13 +18,13 @@ async function checkAuth() {
         }
     }
     catch (error) {
-    console.error('Ошибка проверки аутентификации:', error);       
+        console.error('Authentication check error:', error);       
     }
 }
 
 
 
-// Загрузка данных пользователя
+// Loading user data
 async function loadUserData() {
     await Promise.all([
         loadBalance(),
@@ -32,27 +32,27 @@ async function loadUserData() {
     ]);
     
     document.getElementById('userName').textContent = 
-        `👤 ${currentUser.userName || 'Пользователь'} (ID: ${currentUser.telegramId})`;
+        `👤 ${currentUser.userName || 'User'} (ID: ${currentUser.telegramId})`;
 }
 
-// Загрузка баланса
+// Loading balance
 async function loadBalance() {
     try {
         const response = await fetch('/api/balance');
         const data = await response.json();
         
         const balanceElement = document.getElementById('balanceAmount');
-        balanceElement.textContent = `${data.balance.toFixed(2)} ₽`;
+        balanceElement.textContent = `${data.balance.toFixed(2)} €`;
         
-        // Анимация изменения баланса
+        // Balance change animation
         balanceElement.classList.add('balance-update');
         setTimeout(() => balanceElement.classList.remove('balance-update'), 500);
     } catch (error) {
-        console.error('Ошибка загрузки баланса:', error);
+        console.error('Balance loading error:', error);
     }
 }
 
-// Загрузка истории транзакций
+// Downloading transaction history
 async function loadTransactions() {
     try {
         const response = await fetch('/api/balance/transactions?limit=20');
@@ -61,7 +61,7 @@ async function loadTransactions() {
         const listElement = document.getElementById('transactionsList');        
         
         if (transactions.length === 0) {
-            listElement.innerHTML = '<p class="empty">История транзакций пуста</p>';
+            listElement.innerHTML = '<p class="empty">The transaction history is empty</p>';
             return;
         }
         
@@ -78,7 +78,7 @@ async function loadTransactions() {
                     <div class="transaction-info">
                         <span class="transaction-icon">${icon}</span>
                         <div>
-                            <p class="transaction-description">${t.description || 'Без описания'}${userInfo}</p>
+                            <p class="transaction-description">${t.description || 'No description'}${userInfo}</p>
                             <p class="transaction-date">${formatDate(t.createdAt)}</p>
                         </div>
                     </div>
@@ -89,9 +89,9 @@ async function loadTransactions() {
             `;
         }).join('');
     } catch (error) {
-        console.error('Ошибка загрузки транзакций:', error);
+        console.error('Error loading transactions:', error);
         document.getElementById('transactionsList').innerHTML = 
-            '<p class="error">Ошибка загрузки истории</p>';
+            '<p class="error">Error loading history</p>';
     }
 }
 
@@ -138,13 +138,13 @@ document.addEventListener('keydown', function (event) {
     }
 });
 
-// Пополнение баланса
+// Balance replenishment
 async function deposit() {
     const amount = parseFloat(document.getElementById('depositAmount').value);
     const description = document.getElementById('depositDescription').value;
     
     if (!amount || amount <= 0) {
-        showNotification('Введите корректную сумму', 'error');
+        showNotification('Please enter the correct amount', 'error');
         return;
     }
     
@@ -156,34 +156,34 @@ async function deposit() {
             },
             body: JSON.stringify({
                 amount: amount,
-                description: description || 'Пополнение баланса'
+                description: description || 'Balance replenishment'
             })
         });
         
         const data = await response.json();
         
         if (response.ok) {
-            showNotification('Баланс успешно пополнен!', 'success');
+            showNotification('The balance has been successfully replenished!', 'success');
             closeDepositModal();
             document.getElementById('depositAmount').value = '';
             document.getElementById('depositDescription').value = '';            
             await loadUserData();
         } else {
-            showNotification(data.error || 'Ошибка пополнения', 'error');
+            showNotification(data.error || 'Replenishment error', 'error');
         }
     } catch (error) {
-        console.error('Ошибка пополнения:', error);
-        showNotification('Ошибка подключения к серверу', 'error');
+        console.error('Replenishment error:', error);
+        showNotification('Error connecting to the server', 'error');
     }
 }
 
-// Снятие средств
+// Withdrawal of funds
 async function withdraw() {
     const amount = parseFloat(document.getElementById('withdrawAmount').value);
     const description = document.getElementById('withdrawDescription').value;
     
     if (!amount || amount <= 0) {
-        showNotification('Введите корректную сумму', 'error');
+        showNotification('Please enter the correct amount', 'error');
         return;
     }
     
@@ -195,23 +195,23 @@ async function withdraw() {
             },
             body: JSON.stringify({
                 amount: amount,
-                description: description || 'Снятие средств'
+                description: description || 'Withdrawal of funds'
             })
         });
         
         const data = await response.json();
         
         if (response.ok) {
-            showNotification('Средства успешно сняты!', 'success');
+            showNotification('Funds have been successfully withdrawn!', 'success');
             document.getElementById('withdrawAmount').value = '';
             document.getElementById('withdrawDescription').value = '';
             await loadUserData();
         } else {
-            showNotification(data.error || 'Ошибка снятия', 'error');
+            showNotification(data.error || 'Removal error', 'error');
         }
     } catch (error) {
-        console.error('Ошибка снятия:', error);
-        showNotification('Ошибка подключения к серверу', 'error');
+        console.error('Removal error:', error);
+        showNotification('Error connecting to the server', 'error');
     }
 }
 
@@ -234,9 +234,9 @@ function formatDate(dateString) {
     const now = new Date();
     const diff = now - date;
     
-    if (diff < 60000) return 'только что';
-    if (diff < 3600000) return `${Math.floor(diff / 60000)} мин назад`;
-    if (diff < 86400000) return `${Math.floor(diff / 3600000)} ч назад`;
+    if (diff < 60000) return 'just now';
+    if (diff < 3600000) return `${Math.floor(diff / 60000)} min ago`;
+    if (diff < 86400000) return `${Math.floor(diff / 3600000)} h ago`;
     
     return date.toLocaleDateString('ru-RU', {
         day: '2-digit',
@@ -245,23 +245,4 @@ function formatDate(dateString) {
         hour: '2-digit',
         minute: '2-digit'
     });
-}
-
-// ============================================
-// ТЕСТОВЫЕ ФУНКЦИИ (только для разработки)
-// В продакшене удалить эти функции!
-// ============================================
-
-// Установить тестовый cookie для разработки
-function setTestCookie(telegramId) {
-    document.cookie = `telegram_id=${telegramId}; path=/; max-age=2592000`;
-    console.log(`Cookie установлен: telegram_id=${telegramId}`);
-    location.reload();
-}
-
-// Удалить cookie
-function clearTestCookie() {
-    document.cookie = 'telegram_id=; path=/; max-age=0';
-    console.log('Cookie удалён');
-    location.reload();
 }
