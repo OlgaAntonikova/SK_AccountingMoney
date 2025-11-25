@@ -53,7 +53,7 @@ namespace SK_AccountingMoney.Controllers
                 }
 
                 // Generating a JWT token
-                var token = _jwtService.GenerateToken(user.Id, user.UserName);
+                var token = _jwtService.GenerateToken(user.TelegramId, user.UserName);
 
                 return Ok(new
                 {

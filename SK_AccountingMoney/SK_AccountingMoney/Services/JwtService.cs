@@ -32,7 +32,7 @@ namespace SK_AccountingMoney.Services
             {
                 new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
                 new Claim(ClaimTypes.Name, username ?? "User"),
-                new Claim("telegram_id", userId.ToString()),
+                new Claim("TelegramId", userId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
