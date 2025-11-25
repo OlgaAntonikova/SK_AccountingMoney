@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SK_AccountingMoney.Services;
 
 namespace SK_AccountingMoney.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class BalanceController : ControllerBase
     {
@@ -17,7 +19,14 @@ namespace SK_AccountingMoney.Controllers
 
         private long GetTelegramId()
         {
-            return (long)(HttpContext.Items["TelegramId"] ?? 0);
+            var telegramIdClaim = User.Claims.FirstOrDefault(c => c.Type == "TelegramId")?.Value;
+
+            if (long.TryParse(telegramIdClaim, out long telegramId))
+            {
+                return telegramId;
+            }
+
+            throw new UnauthorizedAccessException("Invalid Telegram ID");
         }
 
         private long GetTelegramIdFromCookie()

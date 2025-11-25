@@ -1,6 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SK_AccountingMoney.Data;
 using SK_AccountingMoney.Services;
+using System.Text;
 
 namespace SK_AccountingMoney
 {
@@ -9,6 +12,13 @@ namespace SK_AccountingMoney
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // Configuration
+            var configuration = builder.Configuration;
+            var jwtSecret = configuration["Jwt:Secret"] ?? "WVGW/bu2NzJzovswCNJeq/ZYX4/ZOTK9q8hQ03mpEgA=";
+            var jwtIssuer = configuration["Jwt:Issuer"] ?? "SK_AccountingMoney";
+            var jwtAudience = configuration["Jwt:Audience"] ?? "SK_AccountingMoney";
+            var botToken = configuration["Telegram:BotToken"] ?? "8506709542:AAGMe1-mruA5EIKvExa26PWPilVoVsl-kFo";
 
             builder.Services.AddControllers()
                 .AddJsonOptions(options =>
@@ -23,6 +33,28 @@ namespace SK_AccountingMoney
                 options.UseSqlite(connectionString));
 
             builder.Services.AddScoped<IBalanceService, BalanceService>();
+
+            builder.Services.AddSingleton(new TelegramAuthService(botToken));
+            builder.Services.AddSingleton(new JwtService(jwtSecret, jwtIssuer, jwtAudience));            
+
+            // JWT Authentication
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
+                        ValidateIssuer = true,
+                        ValidIssuer = jwtIssuer,
+                        ValidateAudience = true,
+                        ValidAudience = jwtAudience,
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
+
+            builder.Services.AddAuthorization();
 
             builder.Services.AddCors(options =>
             {
@@ -74,8 +106,11 @@ namespace SK_AccountingMoney
             app.UseStaticFiles();            
             app.UseCors("AllowAll");            
             app.UseRouting();            
-            app.MapControllers(); 
-            
+            app.MapControllers();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.MapFallback(async context =>
             {                
                 if (context.Request.Path.StartsWithSegments("/api"))
