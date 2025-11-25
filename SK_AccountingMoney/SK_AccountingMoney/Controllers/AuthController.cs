@@ -42,6 +42,9 @@ namespace SK_AccountingMoney.Controllers
                 var telegramId = userData.Id;
                 var username = userData.UserName;
 
+                Console.WriteLine($"[AUTH] [TELEGRAM ID] {telegramId}");
+
+
                 // Check user
                 var user = await  _balanceService.GetUserByTelegramIdAsync(telegramId);
                 if (user == null)
