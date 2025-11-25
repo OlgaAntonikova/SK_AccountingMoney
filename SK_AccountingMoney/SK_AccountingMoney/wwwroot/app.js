@@ -52,9 +52,9 @@ async function checkAuth() {
         }
         else {
             // Token is invalid, clear
+            console.error('Token is invalid!!!')
             localStorage.removeItem('authToken');
-            authToken = null;
-            await checkAuth(); 
+            authToken = null;            
         }
     }
     catch (error) {

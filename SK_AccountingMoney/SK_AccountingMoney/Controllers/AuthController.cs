@@ -37,8 +37,7 @@ namespace SK_AccountingMoney.Controllers
                     return Unauthorized(new { error = "Invalid Telegram data", details = validationResult.Error });
                 }
 
-                var userData = validationResult.UserData!;
-                // Извлечение данных пользователя
+                var userData = validationResult.UserData!;                
                 
                 var telegramId = userData.Id;
                 var username = userData.UserName;
