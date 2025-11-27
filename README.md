@@ -1,4 +1,4 @@
-Balance Manager
+Balance Manager.
 A web application for tracking the shared balance of a family or a group of people, with Telegram bot integration.
 All members can deposit or withdraw money from the shared account, and all transactions are tracked with the author of each transaction clearly recorded.
 
