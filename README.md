@@ -21,11 +21,11 @@ Vanilla JavaScript – no frameworks used
 CSS3 – modern styling with gradients
 Responsive Design – fully adaptable to different screen sizes
 
-* Integration:
+Integration:
 Telegram Bot API – used for authentication and access control
 
-* Database:
+Database:
 SQLite – simple and embedded SQL database
 
-* Deployment
+Deployment
 Hosted on DigitalOcean Droplet
