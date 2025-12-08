@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SK_AccountingMoney.Data;
+using SK_AccountingMoney.Models;
 using SK_AccountingMoney.Services;
 using System.Text;
 
@@ -76,12 +77,12 @@ namespace SK_AccountingMoney
                 if (!dbContext.Users.Any())
                 {
                     dbContext.Users.AddRange(
-                        new Models.User
+                        new User
                         {
                             TelegramId = 527514644,
-                            UserName = "olga_antonikova",                                                        
+                            UserName = "olga_antonikova",                              
                         },
-                        new Models.User
+                        new User
                         {
                             TelegramId = 491581922,
                             UserName = "krasnosergey",                                                       

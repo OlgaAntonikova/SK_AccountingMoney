@@ -15,7 +15,7 @@ namespace SK_AccountingMoney.Models
         [MaxLength(100)]
         public required string UserName { get; set; }              
         
-        public virtual required ICollection<Transaction> Transactions { get; set; }
+        public virtual ICollection<Transaction> Transactions { get; set; } = [];
     }
 
 }

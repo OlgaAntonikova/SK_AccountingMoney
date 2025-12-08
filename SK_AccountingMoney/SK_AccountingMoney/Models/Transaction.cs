@@ -18,9 +18,9 @@ namespace SK_AccountingMoney.Models
         public required string Description { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        
+
         [ForeignKey("UserId")]
-        public virtual required User User { get; set; }
+        public virtual User? User { get; set; } 
 
         [Required]
         [MaxLength(20)]
