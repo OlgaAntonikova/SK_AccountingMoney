@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SK_AccountingMoney.Services;
 
 namespace SK_AccountingMoney.Controllers
@@ -115,6 +116,61 @@ namespace SK_AccountingMoney.Controllers
                 createdAt = t.CreatedAt,
                 userName = t.User?.UserName
             }));
+        }
+
+        [HttpGet("monthly-expenses")]
+        public async Task<IActionResult> GetMonthlyExpenses([FromQuery] int year, int month)
+        {
+            try
+            {
+                var telegramId = GetTelegramId();
+                var user = await _balanceService.GetUserByTelegramIdAsync(telegramId);
+
+                if (user == null)
+                    return NotFound();
+
+                if (year < 2000 || year > 2100)
+                    return BadRequest(new { error = "Incorrect year" });
+
+                if (month < 1 || month > 12)
+                    return BadRequest(new { error = "Incorrect month" });
+
+                var startDate = new DateTime(year, month, 1, 0, 0, 0, DateTimeKind.Utc);
+                var endDate = startDate.AddMonths(1).AddSeconds(-1);
+
+                // Get monthly withdraw transaction
+                var transactions = await _balanceService.GetMonthlyTransactionsAsync(startDate, endDate);
+
+                // Calculate total expenses
+                var totalExpenses = transactions.Sum(t => t.Amount);
+
+                // Get month name 
+                var monthName = new DateTime(year, month, 1).ToString("MMMM",
+                    System.Globalization.CultureInfo.InvariantCulture);
+
+
+                return Ok(new
+                {
+                    year,
+                    month,
+                    monthName, 
+                    totalExpenses,                    
+                    transactions = transactions.Select(t => new
+                    {
+                        id = t.Id,
+                        amount = t.Amount,
+                        description = t.Description,
+                        userName = t.User?.UserName,
+                        createdAt = t.CreatedAt
+                    })
+                });
+            }
+
+            catch (Exception ex)
+            {                
+                return StatusCode(500, new { error = "Server error", details = ex.Message });
+            }
+
         }
     }
 

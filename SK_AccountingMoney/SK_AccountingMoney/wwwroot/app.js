@@ -143,6 +143,77 @@ async function loadTransactions() {
     }
 }
 
+async function loadMonthlyExpenses(year, month) {
+    try {
+        // Show loading state
+        document.getElementById('totalExpensesAmount').textContent = 'Loading...';        
+        document.getElementById('expensesList').innerHTML = '<p class="loading">Loading transactions...</p>';
+
+        const response = await fetch(`/api/balance/monthly-expenses?year=${year}&month=${month}`, {
+            headers: {
+                'Authorization': `Bearer ${authToken}`
+            }
+        });
+
+        if (!response.ok) {
+            console.error('❌ Error loading expenses:', response.status);
+            showExpensesError('Failed to load expenses data');
+            return;
+        }
+
+        const data = await response.json();        
+
+        // Display total expenses
+        document.getElementById('totalExpensesAmount').textContent = `${data.totalExpenses.toFixed(2)} €`;        
+
+        // Display transactions list
+        displayExpensesList(data.transactions);
+
+    } catch (error) {
+        console.error('❌ Error loading expenses:', error);
+        showExpensesError('Error loading expenses: ' + error.message);
+    }
+}
+
+function displayExpensesList(transactions) {
+    const listElement = document.getElementById('expensesList');
+
+    if (!transactions || transactions.length === 0) {
+        listElement.innerHTML = '<p class="empty">No expenses for this month</p>';
+        return;
+    }
+
+    listElement.innerHTML = transactions.map(t => {
+        return `
+            <div class="transaction-item withdraw">
+                <div class="transaction-info">
+                    <span class="transaction-icon">➖</span>
+                    <div>
+                        <p class="transaction-description">
+                            ${t.description || 'No description'}
+                            ${t.userName ? ` <span class="user-badge">${t.userName}</span>` : ''}
+                        </p>
+                        <p class="transaction-date">${formatDate(t.createdAt)}</p>
+                    </div>
+                </div>
+                <div class="transaction-amount withdraw">
+                    -${t.amount.toFixed(2)} €
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function onMonthChange() {
+    const monthSelector = document.getElementById('monthSelector');
+    const selectedDate = monthSelector.value; // Format: "2025-12"
+
+    if (!selectedDate) return;
+
+    const [year, month] = selectedDate.split('-').map(Number);
+    loadMonthlyExpenses(year, month);
+}
+
 function openDepositModal() {
     const modal = document.getElementById('depositModal');
     modal.classList.add('show');
@@ -179,10 +250,38 @@ function closeHistoryModal() {
     modal.classList.remove('show');
 }
 
+function openExpensesModal() {
+    const modal = document.getElementById('expensesModal');
+    modal.classList.add('show');
+
+    // Set current month as default
+    const now = new Date();
+    const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    document.getElementById('monthSelector').value = currentMonth;
+
+    // Load expenses for current month
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+
+    loadMonthlyExpenses(year, month)
+    modal.onclick = function (event) {
+        if (event.target === modal) {
+            closeExpensesModal();
+        }
+    };
+}
+
+function closeExpensesModal() {
+    const modal = document.getElementById('expensesModal');
+    modal.classList.remove('show');
+
+}
+
 document.addEventListener('keydown', function (event) {
     if (event.key === 'Escape') {
         closeDepositModal();
         closeHistoryModal();
+        closeExpensesModal();
     }
 });
 
@@ -295,4 +394,10 @@ function formatDate(dateString) {
         hour: '2-digit',
         minute: '2-digit'
     });
+}
+
+function showExpensesError(message) {
+    document.getElementById('totalExpensesAmount').textContent = '0.00 €';    
+    document.getElementById('expensesList').innerHTML =
+        `<p class="error">${message}</p>`;
 }

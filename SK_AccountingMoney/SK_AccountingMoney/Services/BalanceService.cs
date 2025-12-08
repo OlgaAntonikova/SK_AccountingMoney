@@ -118,5 +118,16 @@ namespace SK_AccountingMoney.Services
                 .Take(limit)
                 .ToListAsync();
         }
+
+        public async Task<List<Transaction>> GetMonthlyTransactionsAsync(DateTime startDate, DateTime endDate)
+        {
+           return await _context.Transactions
+            .Include(t => t.User)
+            .Where(t => t.Type == "withdraw"
+                && t.CreatedAt >= startDate
+                && t.CreatedAt <= endDate)
+            .OrderByDescending(t => t.CreatedAt)
+            .ToListAsync();
+        }
     }
 }

@@ -456,3 +456,63 @@ body {
         width: 95%;
     }
 }
+
+.month-selector {
+    width: 100%;
+    padding: 15px;
+    font-size: 18px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+    .month-selector:focus {
+        outline: none;
+        border-color: #ff9800;
+    }
+
+.expense-total-card {
+    background: linear-gradient(135deg, #ff9800, #f57c00);
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.expense-label {
+    font-size: 16px;
+    opacity: 0.9;
+    margin-bottom: 10px;
+}
+
+.expense-amount {
+    font-size: 2.5em;
+    font-weight: bold;
+}
+
+.expense-list-title {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+}
+
+.user-badge {
+    background: rgba(102, 126, 234, 0.1);
+    color: #667eea;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+/* Expenses button color */
+.expenses-color {
+    background: #ff9800;
+    color: white;
+}
+
+    .expenses-color:hover {
+        background: #f57c00;
+    }

@@ -37,6 +37,9 @@
                 <button onclick="openHistoryModal()" class="secondary-btn history-color">
                     📋 Operation history
                 </button>
+                <button onclick="openExpensesModal()" class="secondary-btn expenses-color">
+                    📊 Monthly expenses
+                </button>
             </div>
         </div>
     </div>
@@ -69,9 +72,31 @@
         </div>
     </div>
 
+    <div id="expensesModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📊 Monthly expenses</h2>
+                <button class="close-btn" onclick="closeExpensesModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="month" id="monthSelector" onchange="onMonthChange()"
+                       class="month-selector">
+            </div>
+            <div class="expense-total-card">
+                <p class="expense-label">Total expenses</p>
+                <p class="expense-amount" id="totalExpensesAmount">0.00 €</p>
+            </div>            
+            <h3 class="expense-list-title">Transactions</h3>
+            <div id="expensesList" class="transactions-list">
+                <p class="loading">Loading...</p>
+            </div>
+        </div>
+    </div>
+
+
 
     <div id="notification" class="notification"></div>
 
-    <script src="app.js?v=1.0.02"></script>
+    <script src="app.js?v=1.0.03"></script>
 </body>
 </html>
