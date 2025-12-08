@@ -50,7 +50,7 @@ namespace SK_AccountingMoney.Services
             return sharedBalance?.Balance ?? 0;
         }
 
-        public async Task<bool> DepositAsync(long telegramId, decimal amount, string description = null)
+        public async Task<bool> DepositAsync(long telegramId, decimal amount, string? description = null)
         {
             if (amount <= 0)
                 return false;
@@ -80,7 +80,7 @@ namespace SK_AccountingMoney.Services
             return true;
         }
 
-        public async Task<bool> WithdrawAsync(long telegramId, decimal amount, string description = null)
+        public async Task<bool> WithdrawAsync(long telegramId, decimal amount, string? description = null)
         {
             if (amount <= 0)
                 return false;
