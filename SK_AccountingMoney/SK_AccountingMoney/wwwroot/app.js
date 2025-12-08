@@ -401,3 +401,21 @@ function showExpensesError(message) {
     document.getElementById('expensesList').innerHTML =
         `<p class="error">${message}</p>`;
 }
+
+// Hide keyboard when clicking outside input
+document.addEventListener('click', function (event) {
+    // Check if clicked element is NOT an input
+    if (!event.target.matches('input, textarea')) {
+        // Remove focus from all inputs
+        const inputs = document.querySelectorAll('input, textarea');
+        inputs.forEach(input => input.blur());
+    }
+});
+
+// Also hide keyboard when scrolling
+document.addEventListener('scroll', function () {
+    const activeElement = document.activeElement;
+    if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
+        activeElement.blur();
+    }
+}, { passive: true });

@@ -290,6 +290,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 20px;
 }
 
 .modal-content {
@@ -301,6 +302,7 @@ body {
     overflow-y: auto;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
     animation: slideUp 0.3s ease;
+    margin: auto;
 }
 
 @keyframes fadeIn {
@@ -474,7 +476,7 @@ body {
 
 .expense-total-card {
     background: linear-gradient(135deg, #ff9800, #f57c00);
-    padding: 30px;
+    padding: 25px;
     border-radius: 15px;
     text-align: center;
     color: white;
@@ -488,7 +490,7 @@ body {
 }
 
 .expense-amount {
-    font-size: 2.5em;
+    font-size: 2.2em;
     font-weight: bold;
 }
 
@@ -513,6 +515,44 @@ body {
     color: white;
 }
 
-    .expenses-color:hover {
-        background: #f57c00;
+.expenses-color:hover {
+    background: #f57c00;
+}
+
+/* Mobile optimizations for modals */
+@media (max-width: 768px) {
+    .modal.show {
+        padding: 10px;
+        align-items: flex-start;
+        padding-top: 20px;
     }
+
+    .modal-content {
+        max-height: 85vh;
+        width: 100%;
+    }
+
+    .modal-header {
+        padding: 15px 20px;
+    }
+
+        .modal-header h2 {
+            font-size: 1.2em;
+        }
+
+    .modal-body {
+        padding: 20px;
+    }
+
+    .expense-total-card {
+        padding: 20px;
+    }
+
+    .expense-amount {
+        font-size: 2em;
+    }
+
+    .transaction-item {
+        padding: 10px;
+    }
+}
