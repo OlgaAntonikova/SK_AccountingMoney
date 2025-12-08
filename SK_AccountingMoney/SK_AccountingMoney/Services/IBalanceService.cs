@@ -6,8 +6,8 @@ namespace SK_AccountingMoney.Services
     {
         Task<User> GetUserByTelegramIdAsync(long telegramId);
         Task<decimal> GetSharedBalanceAsync(long telegramId);
-        Task<bool> DepositAsync(long telegramId, decimal amount, string description = null);
-        Task<bool> WithdrawAsync(long telegramId, decimal amount, string description = null);
+        Task<bool> DepositAsync(long telegramId, decimal amount, string? description = null);
+        Task<bool> WithdrawAsync(long telegramId, decimal amount, string? description = null);
         Task<List<Transaction>> GetAllTransactionAsync(int limit = 150);
         Task<List<Transaction>> GetMonthlyTransactionsAsync(DateTime startDate, DateTime endDate);
     }

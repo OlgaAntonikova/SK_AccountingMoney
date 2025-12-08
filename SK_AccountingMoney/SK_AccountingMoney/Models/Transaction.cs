@@ -15,15 +15,15 @@ namespace SK_AccountingMoney.Models
         public decimal Amount { get; set; }        
 
         [MaxLength(500)]
-        public string Description { get; set; }
+        public required string Description { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         
         [ForeignKey("UserId")]
-        public virtual User User { get; set; }
+        public virtual required User User { get; set; }
 
         [Required]
         [MaxLength(20)]
-        public string Type { get; set; } // "deposit" or "withdraw"
+        public required string Type { get; set; } // "deposit" or "withdraw"
     }
 }

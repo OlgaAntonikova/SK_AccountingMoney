@@ -177,7 +177,7 @@ namespace SK_AccountingMoney.Controllers
     public class TransactionRequest
     {
         public decimal Amount { get; set; }
-        public string Description { get; set; }
+        public required string Description { get; set; }
     }
 }
 
