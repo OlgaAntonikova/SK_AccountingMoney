@@ -473,11 +473,11 @@ body {
 
 .expense-total-card {
     background: linear-gradient(135deg, #ff9800, #f57c00);
-    padding: 25px;
+    padding: 15px;
     border-radius: 15px;
     text-align: center;
     color: white;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .expense-label {
@@ -493,7 +493,7 @@ body {
 
 .expense-list-title {
     color: #333;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     font-size: 1.2em;
 }
 
@@ -514,6 +514,10 @@ body {
 
 .expenses-color:hover {
     background: #f57c00;
+}
+
+#expensesModal .transactions-list {
+    max-height: none !important;
 }
 
 /* Mobile optimizations for modals */
