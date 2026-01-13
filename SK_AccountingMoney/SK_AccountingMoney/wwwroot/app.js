@@ -411,11 +411,3 @@ document.addEventListener('click', function (event) {
         inputs.forEach(input => input.blur());
     }
 });
-
-// Also hide keyboard when scrolling
-document.addEventListener('scroll', function () {
-    const activeElement = document.activeElement;
-    if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
-        activeElement.blur();
-    }
-}, { passive: true });
